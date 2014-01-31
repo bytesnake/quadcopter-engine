@@ -9,7 +9,7 @@
 void QC_IO_UsbInit();
 
 extern qc_serial_t QC_UsbSerial;
-extern FILE QC_IO_UsbSTDOUT;
+extern FILE QC_UsbSTDOUT;
 
 // Basic
 #define QC_IO_USBWAITIN() while (!(UEINTX & (1<<TXINI)))

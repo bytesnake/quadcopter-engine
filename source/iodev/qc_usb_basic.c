@@ -1,5 +1,9 @@
 #include "../../include/quadcopter.h"
 
+qc_serial_t QC_UsbSerial;
+
+FILE QC_UsbSTDOUT = FDEV_SETUP_STREAM(QC_IO_UsbSendByte, NULL, _FDEV_SETUP_WRITE);
+
 inline uint8_t QC_IO_UsbWaitForIO () {
 	while (!(UEINTX & ((1<<TXINI)|(1<<RXOUTI))));
 

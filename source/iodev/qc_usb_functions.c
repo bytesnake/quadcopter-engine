@@ -22,8 +22,6 @@ const qc_io_usbdevicedesc_t QC_IO_UsbDeviceDescA =
 const qc_io_usbdevicedesc_t QC_IO_UsbDeviceDescB =
         D_DEVICE(0x02,0x00,0x00,64,USB_VID,USB_PID,0x100,IMANUFACTURER,IPRODUCT,0,1);
 
-FILE QC_IO_UsbSTDOUT = FDEV_SETUP_STREAM(QC_IO_UsbSendByte, NULL, _FDEV_SETUP_WRITE);
-
 void QC_IO_UsbInitEndpoint( uint8_t index, uint8_t type, uint8_t size ) {
 	QC_IO_USBSETENDPOINT ( index );
 	UECONX = 1;

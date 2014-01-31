@@ -3,10 +3,10 @@
 
 #include "quadcopter.h"
 
-extern qc_serial_t QC_IO_InternSerialOut;
-extern qc_serial_t QC_IO_InternSerialIn;
+extern qc_serial_t QC_InternalSerialOut;
+extern qc_serial_t QC_InternalSerialIn;
 
-extern FILE QC_IO_InternSTDOUT;
+extern FILE QC_InternalSTDOUT;
 
 void QC_IO_InternSerialInit ();
 void QC_IO_InternSerialWrite ( uint8_t byte );

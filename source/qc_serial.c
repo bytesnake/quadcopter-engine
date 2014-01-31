@@ -1,14 +1,5 @@
 #include "../include/quadcopter.h"
 
-qc_serial_t QC_UsbSerial;
-qc_serial_t QC_InternSerial;
-
-void QC_SerialInit ()
-{
-	QC_UsbSerial.tail = QC_InternSerial.tail = 0;
-	QC_UsbSerial.head = QC_InternSerial.head = 0;
-}
-
 void QC_SerialAccept ( qc_serial_t *serial, const void *data, uint8_t count )
 {
 	const uint8_t *d = (const uint8_t*) data;
@@ -28,7 +19,7 @@ void QC_SerialPutChar ( qc_serial_t *serial, uint8_t byte )
 uint8_t QC_SerialGetChar ( qc_serial_t *serial )
 {
 	if ( !QC_SerialHasData ( serial ))
-		return;
+		return 0;
 
 	if ( ++ serial->tail == SERIAL_BUFFER_SIZE )
 		serial->tail = 0;

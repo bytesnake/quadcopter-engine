@@ -6,19 +6,22 @@ int main(int argc, const char *argv[])
 
 	QC_IO_UsbInit ();
 	QC_IO_InternSerialInit ();
-	QC_SerialInit ();
 
-	stdout = &QC_IO_UsbSTDOUT;
+	stdout = &QC_UsbSTDOUT;
+
+	uint64_t width;
+
+	float freq;
 
 	for ( ;; ) {
-		while ( !QC_SerialHasData ( &QC_UsbSerial ));
+		//QC_GeneratePulseUs ( &QC_Pins.D5, HIGH, 500 );
+		//QC_GeneratePulseUs ( &QC_Pins.D5, LOW , 500 );
+		width = QC_MeasurePulseWidth ( &QC_Pins.D5, HIGH, 1000*10*1000UL);
+		freq = 1.0f / (width/1000.0f/1000.0f);
 
-		uint8_t b = QC_SerialGetChar ( &QC_UsbSerial );
+		printf ( "%lu\n",  width );
+		printf ( "%f\n", freq );
 
-		printf ( "%c", b );
-
-		QC_IO_DigitalWrite ( &QC_Pins.D11 , HIGH );		
-	
 		/*uint16_t power_16bit = QC_IO_AnalogRead ( &QC_Pins.A5 );
 		float power = power_16bit / 1024.0f;
 
