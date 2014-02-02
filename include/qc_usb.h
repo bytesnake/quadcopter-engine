@@ -10,6 +10,7 @@ void QC_IO_UsbInit();
 
 extern qc_serial_t QC_UsbSerial;
 extern FILE QC_UsbSTDOUT;
+extern FILE QC_UsbSTDIN;
 
 // Basic
 #define QC_IO_USBWAITIN() while (!(UEINTX & (1<<TXINI)))
@@ -31,7 +32,7 @@ inline uint8_t QC_IO_UsbFifoByteFree ( uint8_t ep );
 inline void QC_IO_UsbFlush ( uint8_t ep );
 
 // unkontrolliertes IO
-int8_t QC_UsbRecvByte ( uint8_t ep ); 
+uint8_t QC_IO_UsbRecvByte ( uint8_t ep ); 
 uint16_t QC_IO_UsbRecv ( uint8_t ep, void *data, uint16_t count );
 void QC_IO_UsbSendByte ( uint8_t byte, FILE *stream );
 uint16_t QC_IO_UsbSend ( uint8_t ep, const void *data, uint16_t count );

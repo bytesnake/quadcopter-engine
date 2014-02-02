@@ -4,10 +4,10 @@
 #include <avr/interrupt.h>
 #include "./qc_datatypes.h"
 
-unsigned long millis ();
-unsigned long micros ();
+uint64_t millis ();
+uint64_t micros ();
 
-void msleep ( unsigned long ms );
-void usleep ( unsigned long us );
+void msleep ( uint64_t ms );
+void usleep ( uint64_t us );
 
 #endif

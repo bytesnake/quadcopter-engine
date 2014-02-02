@@ -2,7 +2,9 @@
 
 qc_serial_t QC_UsbSerial;
 
+FILE QC_UsbSTDIN  = FDEV_SETUP_STREAM(QC_IO_UsbRecvByte, NULL, _FDEV_SETUP_READ );
 FILE QC_UsbSTDOUT = FDEV_SETUP_STREAM(QC_IO_UsbSendByte, NULL, _FDEV_SETUP_WRITE);
+
 
 inline uint8_t QC_IO_UsbWaitForIO () {
 	while (!(UEINTX & ((1<<TXINI)|(1<<RXOUTI))));
@@ -67,14 +69,16 @@ uint8_t QC_IO_UsbRecvByte( uint8_t ep ) {
 	
 	QC_IO_UsbRecv ( ep, &b, 1 );
 
-	return b;
+	if ( b == '\r' )
+		return '\n';
+	else
+		return b;
 }
 
 uint16_t QC_IO_UsbSend( uint8_t ep, const void *data, uint16_t count ) {
 	const uint8_t *d = (const uint8_t*) data;
 	uint8_t timeout, n, reg;
 	uint16_t i;	
-
 
 	QC_ResetError ();
 
@@ -125,7 +129,6 @@ uint16_t QC_IO_UsbSend( uint8_t ep, const void *data, uint16_t count ) {
 		if ( !QC_IO_USBIOALLOWED () || ((count == 0) && (ep & TRANSFER_RELEASE)) )
 			QC_IO_USBRELEASETX ();
 		
-
 		QC_RestoreISR ( reg );	
 
 	}

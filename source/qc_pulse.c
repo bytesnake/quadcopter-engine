@@ -2,32 +2,32 @@
 
 uint64_t QC_MeasurePulseWidth ( qc_pin_t *pin, uint8_t state, uint64_t timeout )
 {
-	// Set state
+	volatile uint64_t width;
+	volatile uint64_t cycles;
+
+	// Set pin to output
 	(void) QC_IO_DigitalRead ( pin );
 
-	uint64_t measured_width = 0;
+	cycles = microsecondsToClockCycles ( timeout / 79.61689520385287168793 );
 
-	unsigned long i = 0;
-	unsigned long cycles = microsecondsToClockCycles ( timeout );
- 
 	while ( !(*(port_to_input [ pin->port ]) & pin->bit))
-		if ( ++ i == cycles )
+		if ( -- cycles == 0 )
 			return 0;
 
-	while ( (*(port_to_input [ pin->port ]) & pin->bit));
-		if ( ++ i == cycles )
+	while ( (*(port_to_input [ pin->port ]) & pin->bit))
+		if ( -- cycles == 0 )
 			return 0;
 
+	width = 0;
 	while ( !(*(port_to_input [ pin->port ]) & pin->bit))
 	{
-		if ( ++ i == cycles )
+		if ( -- cycles == 0 )
 			return 0;
 
-		measured_width ++;
+		width ++;
 	}
 
-	//printf ( "%lu\n", measured_width );
-	return clockCyclesToMicroseconds ( measured_width * 140.16882958424801353471 + 16 );
+	return clockCyclesToMicroseconds ( width * 70.08441479212400676735 + 16 );
 }
 
 void QC_GeneratePulseUs ( qc_pin_t *pin, uint8_t state, uint16_t width )

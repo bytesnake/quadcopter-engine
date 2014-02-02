@@ -99,6 +99,9 @@ void QC_IO_UsbSendDescriptor ( qc_io_usbsetup_t *setup ) {
 	if ( desc_addr == 0 )
 		QC_SetLastError ( QC_ERROR_IO_UNKNOWNCOMMAND );
 
+	if ( QC_GetLastError () != QC_ERROR_SUCCESS )
+		return;
+
 	desc_length = pgm_read_byte ( desc_addr );
 	
 	QC_IO_UsbControlSend ( TRANSFER_PGM, desc_addr, desc_length );

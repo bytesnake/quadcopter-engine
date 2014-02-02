@@ -13,8 +13,8 @@
 #define FRACT_INC ((MICROSECONDS_PER_TIMER0_OVERFLOW % 1000) >> 3)
 #define FRACT_MAX (1000 >> 3)
 
-volatile unsigned long timer0_overflow_count = 0;
-volatile unsigned long timer0_millis = 0;
+volatile uint64_t timer0_overflow_count = 0;
+volatile uint64_t timer0_millis = 0;
 static unsigned char timer0_fract = 0;
 
 #if defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__)
@@ -25,7 +25,7 @@ ISR(TIMER0_OVF_vect)
 {
 	// copy these to local variables so they can be stored in registers
 	// (volatile variables must be read from memory on every access)
-	unsigned long m = timer0_millis;
+	uint64_t m = timer0_millis;
 	unsigned char f = timer0_fract;
 
 	m += MILLIS_INC;
@@ -40,9 +40,9 @@ ISR(TIMER0_OVF_vect)
 	timer0_overflow_count++;
 }
 
-unsigned long millis()
+uint64_t millis()
 {
-	unsigned long m;
+	uint64_t m;
 	uint8_t oldSREG = SREG;
 
 	// disable interrupts while we read timer0_millis or we might get an
@@ -54,8 +54,8 @@ unsigned long millis()
 	return m;
 }
 
-unsigned long micros() {
-	unsigned long m;
+uint64_t micros() {
+	uint64_t m;
 	uint8_t oldSREG = SREG, t;
 	
 	cli();
@@ -82,7 +82,7 @@ unsigned long micros() {
 	return ((m << 8) + t) * (64 / clockCyclesPerMicrosecond());
 }
 
-void msleep(unsigned long ms)
+void msleep(uint64_t ms)
 {
 	uint16_t start = (uint16_t)micros();
 
@@ -96,7 +96,7 @@ void msleep(unsigned long ms)
 }
 
 /* Delay for the given number of microseconds.  Assumes a 8 or 16 MHz clock. */
-void usleep(unsigned long us)
+void usleep(uint64_t us)
 {
 	// calling avrlib's delay_us() function with low values (e.g. 1 or
 	// 2 microseconds) gives delays longer than desired.

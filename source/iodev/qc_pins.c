@@ -95,13 +95,12 @@ inline void QC_IO_PWMDisable ( qc_pin_t *pin )
 		case TIMER4D: TCCR4C &=~(1 << COM4D1); break;
 	}
 	
-
 	pin->state = DISABLED;
 }
 
 void QC_IO_DigitalEnable ( qc_pin_t *pin, uint8_t type )
 {
-	if ( pin->type != PWM && pin->type != DIGITAL || pin->state != DISABLED )
+	if ( (pin->type != PWM && pin->type != DIGITAL) || pin->state != DISABLED )
 		return;
 
 	uint8_t sreg;
@@ -213,7 +212,7 @@ void QC_IO_AnalogWrite ( qc_pin_t *pin, uint8_t value )
 	if ( pin->state == DISABLED )
 		QC_IO_DigitalEnable ( pin, OUTPUT );
 
-	if ( pin->state == DIGITAL )
+	else if ( pin->state == DIGITAL )
 		QC_IO_PWMEnable ( pin );
 
 	switch ( pin->timer )
