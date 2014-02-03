@@ -113,7 +113,7 @@ ISR ( USB_GEN_vect )
 
 		while ( used -- ) {
 			uint8_t b = QC_IO_UsbRecvByte ( CDC_RX );
-			QC_SerialPutChar ( &QC_UsbSerial, b );
+			QC_SerialPutChar ( &QC_UsbSerialIn, b );
 		}
 	}
 }

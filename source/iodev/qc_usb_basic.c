@@ -1,6 +1,7 @@
 #include "../../include/quadcopter.h"
 
-qc_serial_t QC_UsbSerial;
+qc_serial_t QC_UsbSerialIn;
+qc_serial_t QC_UsbSerialOut;
 
 FILE QC_UsbSTDIN  = FDEV_SETUP_STREAM(QC_IO_UsbRecvByte, NULL, _FDEV_SETUP_READ );
 FILE QC_UsbSTDOUT = FDEV_SETUP_STREAM(QC_IO_UsbSendByte, NULL, _FDEV_SETUP_WRITE);
@@ -143,6 +144,21 @@ void QC_IO_UsbSendByte ( uint8_t byte, FILE *stream ) {
 		if ( byte == '\n' ) {
 			byte = '\r';
 			QC_IO_UsbSend ( CDC_TX, &byte, 1 );
+		}
+	}
+	else
+		QC_SerialPutChar ( &QC_UsbSerialOut, byte );
+}
+
+void QC_IO_SendOutputBuffer ()
+{
+	uint8_t c;
+
+	if ( QC_IO_UsbLineInfo.lineState > 0 )
+	{
+		while ( QC_SerialHasData ( &QC_UsbSerialOut )) {
+			c = QC_SerialGetChar ( &QC_UsbSerialOut );
+			QC_IO_UsbSendByte ( c, NULL );
 		}
 	}
 }

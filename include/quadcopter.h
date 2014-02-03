@@ -25,6 +25,7 @@
 #include "qc_internserial.h"
 #include "qc_wire.h"
 
+#include "mpu6050.h"
 
 #define clockCyclesPerMicrosecond() ( F_CPU / 1000000L )
 #define clockCyclesToMicroseconds(a) ( (a) / clockCyclesPerMicrosecond() )

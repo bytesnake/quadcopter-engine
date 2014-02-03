@@ -41,6 +41,8 @@ void WEAK QC_IO_CDCInit( qc_io_usbsetup_t *setup ) {
 		else if ( setup->bRequest == CDC_SET_CONTROL_LINE_STATE )
 		{
 			QC_IO_UsbLineInfo.lineState = setup->wValueL;
+
+			QC_IO_SendOutputBuffer ();
 		
 			if ( QC_IO_UsbLineInfo.dwDTERate == 1200 ) {
 				if ((QC_IO_UsbLineInfo.lineState & 0x01) == 0) {

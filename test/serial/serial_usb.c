@@ -9,11 +9,13 @@ int main(int argc, const char *argv[])
 
 	uint8_t byte;
 
+	printf ( "Vor for!\n" );
+
 	for ( ;; )
 	{
-		while ( !QC_SerialHasData ( &QC_UsbSerial ));
+		while ( !QC_SerialHasData ( &QC_UsbSerialIn ));
 		
-		byte = QC_SerialGetChar ( &QC_UsbSerial );
+		byte = QC_SerialGetChar ( &QC_UsbSerialIn );
 		printf ( "%c", byte );
 	}	
 

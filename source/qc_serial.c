@@ -31,3 +31,11 @@ bool QC_SerialHasData ( qc_serial_t *serial )
 {
 	return serial->tail != serial->head;
 }
+
+uint8_t QC_SerialSize ( qc_serial_t *serial )
+{
+	if ( serial->tail > serial->head )
+		return SERIAL_BUFFER_SIZE - serial->tail + serial->head;
+	else
+		return serial->head - serial->tail;
+}

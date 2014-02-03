@@ -8,7 +8,8 @@
 
 void QC_IO_UsbInit();
 
-extern qc_serial_t QC_UsbSerial;
+extern qc_serial_t QC_UsbSerialIn;
+extern qc_serial_t QC_UsbSerialOut;
 extern FILE QC_UsbSTDOUT;
 extern FILE QC_UsbSTDIN;
 

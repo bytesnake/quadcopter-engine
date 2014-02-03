@@ -6,6 +6,7 @@
 
 #define INPUT  0
 #define OUTPUT 1
+#define PULLUP 2
 
 #define NOTIMER 0
 #define TIMER0A 1

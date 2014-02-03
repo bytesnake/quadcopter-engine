@@ -121,6 +121,12 @@ void QC_IO_DigitalEnable ( qc_pin_t *pin, uint8_t type )
 		*reg |= pin->bit;
 		QC_RestoreISR ( sreg );
 	}
+	else if ( type == PULLUP ) {
+		sreg = QC_DisableISR ();
+		*reg &=~pin->bit;
+		*out |= pin->bit;
+		QC_RestoreISR ( sreg );
+	}
 	else 
 		return; 
 

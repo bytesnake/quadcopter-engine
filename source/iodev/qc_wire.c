@@ -71,8 +71,8 @@ void QC_IO_TwiInit(void)
   twi_inRepStart = false;
   
   // activate internal pullups for twi.
-  QC_IO_DigitalWrite ( &QC_Pins.D2, 1 );
-  QC_IO_DigitalWrite ( &QC_Pins.D3, 1 );
+  QC_IO_DigitalWrite ( &QC_Pins.D2, PULLUP);
+  QC_IO_DigitalWrite ( &QC_Pins.D3, PULLUP);
  
   // initialize twi prescaler and bit rate
   cbi(TWSR, TWPS0);
@@ -248,7 +248,7 @@ uint8_t QC_IO_TwiWriteTo(uint8_t address, uint8_t* data, uint8_t length, uint8_t
   else if (twi_error == TW_MT_DATA_NACK)
     return 3;	// error: data send, nack received
   else
-    return 4;	// other twi error
+    return twi_error;	// other twi error
 }
 
 /* 

@@ -13,15 +13,15 @@ OUTPUT=binary/quadcopter
 PARAMS=-Os -Wl,-u,vfprintf -lprintf_flt -lm -mmcu=$(TYPE) -DUSB_VID=0x2341 -DUSB_PID=0x8041 -DF_CPU=$(CPU_SPEED) -DBAUD=$(BAUD)
 
 default:
-ifeq (,$(main))
+ifeq (,$(test))
 	$(CC) $(PARAMS) $(SOURCES) test/serial/serial_usb.c -o $(OUTPUT)
 	$(OBJCPY) -O ihex -R .eeprom $(OUTPUT) $(OUTPUT).hex
-else ifeq (,$(findstring test,$(main)))
-	$(CC) $(PARAMS) $(SOURCES) $(shell find . -name $(main)*) -o $(OUTPUT)
+else ifeq (,$(findstring test,$(test)))
+	$(CC) $(PARAMS) $(SOURCES) $(shell find test/ -wholename "test/*/*" -name $(test)*) -o $(OUTPUT)
 	$(OBJCPY) -O ihex -R .eeprom $(OUTPUT) $(OUTPUT).hex
 endif
 
-upload:
+upload: default
 	$(shell python2 utils/upload.py $(DEV))
 monitor:
 	$(shell screen $(DEV) $(BAUD))

@@ -14,9 +14,9 @@ int main(int argc, const char *argv[])
 	
 	for ( ;; )
 	{
-		while ( !QC_SerialHasData( &QC_UsbSerial ));
+		while ( !QC_SerialHasData( &QC_UsbSerialIn ));
 		
-		arr[i++] = QC_SerialGetChar ( &QC_UsbSerial );
+		arr[i++] = QC_SerialGetChar ( &QC_UsbSerialIn );
 	
 		printf ( "%c", arr[i-1] );
 
