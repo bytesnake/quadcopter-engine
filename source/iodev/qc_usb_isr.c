@@ -100,7 +100,7 @@ ISR ( USB_GEN_vect )
 		qc_io_usbselectedep = 0;
 		UEIENX = 1 << RXSTPE;
 	}
-
+		
 	// Start of frame
 	if ( udint_tmp & (1 << SOFI) ) {
 		QC_IO_UsbFlush ( CDC_TX );

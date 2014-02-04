@@ -585,6 +585,16 @@
 // I2C address thus becomes 0x69.
 #define MPU6050_I2C_ADDRESS 0x68
 
+#define MPU6050_GYRO_250ds 0x00
+#define MPU6050_GYRO_500ds 0x01
+#define MPU6050_GYRO_1000ds 0x02
+#define MPU6050_GYRO_2000ds 0x03
+
+#define MPU6050_ACCEL_2G 0x00
+#define MPU6050_ACCEL_4G 0x01
+#define MPU6050_ACCEL_8G 0x02
+#define MPU6050_ACCEL_16G 0x03
+
 typedef union {
 struct
   {
@@ -613,6 +623,17 @@ struct
     int16_t y_gyro;
     int16_t z_gyro;
   } value;
-} accel_t_gyro_union;
+} mpu6050_rawvalues_t;
+
+typedef struct
+{
+	float temperature;
+	float x_accel;
+	float y_accel;
+	float z_accel;
+	float x_gyro;
+	float y_gyro;
+	float z_gyro;
+} mpu6050_values_t;
 
 #endif

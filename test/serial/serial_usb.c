@@ -13,10 +13,10 @@ int main(int argc, const char *argv[])
 
 	for ( ;; )
 	{
-		while ( !QC_SerialHasData ( &QC_UsbSerialIn ));
+		//while ( !QC_SerialHasData ( &QC_UsbSerialIn ));
 		
-		byte = QC_SerialGetChar ( &QC_UsbSerialIn );
-		printf ( "%c", byte );
+		//byte = QC_SerialGetChar ( &QC_UsbSerialIn );
+		printf ( "Hallo!\n", byte );
 	}	
 
 	return 0;
