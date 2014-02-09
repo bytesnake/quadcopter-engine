@@ -2,7 +2,7 @@
 	
 #define SWAP(x,y) swap = x; x = y; y = swap
 
-void MPU6050_ReadValues (mpu6050_values_t *data, uint8_t gyro_range, uint8_t accel_range ) {
+void MPU6050_ReadValues (mpu6050_values_t *data, uint8_t gyro_range, uint8_t accel_range, mpu6050_gyro_offset_t *offset ) {
 	mpu6050_rawvalues_t rawdata;
 	uint8_t swap;
 	float gyro_range_f;	

@@ -11,6 +11,9 @@
 // the registers in that unknown area are for gain 
 // and offsets.
 // 
+#define MPU6050_GOFFSET_X		   0x00
+#define MPU6050_GOFFSET_Y		   0x01
+#define MPU6050_GOFFSET_Z		   0x02
 #define MPU6050_AUX_VDDIO          0x01   // R/W
 #define MPU6050_SMPLRT_DIV         0x19   // R/W
 #define MPU6050_CONFIG             0x1A   // R/W
@@ -635,5 +638,12 @@ typedef struct
 	float y_gyro;
 	float z_gyro;
 } mpu6050_values_t;
+
+typedef struct
+{
+	uint8_t x;	
+	uint8_t y;
+	uint8_t z;
+} mpu6050_gyro_offset_t;
 
 #endif

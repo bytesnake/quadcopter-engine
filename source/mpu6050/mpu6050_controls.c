@@ -44,6 +44,15 @@ void MPU6050_SetAccelRange ( uint8_t c )
 	MPU6050_WriteByte ( MPU6050_ACCEL_CONFIG, &c );
 }
 
+void MPU6050_GetGyroOffset ( mpu6050_gyro_offset_t *offset )
+{
+	MPU6050_Read ( MPU6050_GOFFSET_X, &offset->x );
+	MPU6050_Read ( MPU6050_GOFFSET_Y, &offset->y );
+	MPU6050_Read ( MPU6050_GOFFSET_Z, &offset->z );
+
+	//TODO!!
+}
+	
 void MPU6050_StartSelfTest ()
 {
 	uint8_t c = 0b1110000;

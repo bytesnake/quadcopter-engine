@@ -9,6 +9,8 @@ int main(int argc, const char *argv[])
 	stdout = &QC_UsbSTDOUT;
 
 	uint8_t c;
+	mpu6050_gyro_offset_t offset;
+	mpu6050_values_t data;
 
 	c = MPU6050_GetPowerMode ();
 	
@@ -20,24 +22,25 @@ int main(int argc, const char *argv[])
 
 	MPU6050_SetFilterMode ( 0x00 );
 
-	printf ( "Power Mode at Init: %02X\n\n", c );
+	MPU6050_GetGyroOffset ( &offset );
 
-	mpu6050_values_t data;
+	printf ( "Power Mode at Init: %02X\n\n", c );
 
 	for ( ;; )
 	{
-		msleep ( 5 );
+		msleep ( 10 );
 
-		MPU6050_ReadValues ( &data, MPU6050_GYRO_2000ds, MPU6050_ACCEL_4G );
+		MPU6050_ReadValues ( &data, MPU6050_GYRO_2000ds, MPU6050_ACCEL_4G, &offset );
 		
 		if ( QC_GetLastError () != QC_ERROR_SUCCESS ) {
 			QC_ResetError ();
 			continue;
 		}
 
-		printf ( "%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", 
+		printf ( "%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\t%.2f\n", 
 			data.x_gyro, data.y_gyro, data.z_gyro,
-			data.x_accel,data.y_accel,data.z_accel );
+			data.x_accel,data.y_accel,data.z_accel, atan2 ( data.x_accel, data.z_accel ) / PI * 180,
+			-atan2 ( data.y_accel, data.z_accel ) / PI * 180);
 	}
 
 	return 0;

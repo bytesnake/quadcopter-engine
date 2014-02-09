@@ -27,6 +27,8 @@
 
 #include "mpu6050.h"
 
+#include "kalman.h"
+
 #define clockCyclesPerMicrosecond() ( F_CPU / 1000000L )
 #define clockCyclesToMicroseconds(a) ( (a) / clockCyclesPerMicrosecond() )
 #define microsecondsToClockCycles(a) ( (a) * clockCyclesPerMicrosecond() )
@@ -37,6 +39,8 @@
 
 #define DEBUG PORTD |= (1<<5); PORTB &= ~(1<<0);
 #define DEBUG_OFF PORTD &= ~(1<<5); PORTB |= (1<<0);
+
+#define PI 3.14
 
 uint8_t QC_DisableISR ();
 void QC_RestoreISR ( uint8_t sreg );
