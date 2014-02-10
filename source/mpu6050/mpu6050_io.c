@@ -30,13 +30,13 @@ void MPU6050_Write ( uint8_t start, const void *buffer, uint8_t size )
 		QC_SetLastError ( QC_ERROR_TWI_WRITE );
 }
 
-void MPU6050_WriteByte ( uint8_t start, const uint8_t *byte )
+void MPU6050_WriteByte ( uint8_t start, const uint8_t byte )
 {
 	uint8_t buf[2];
 	uint8_t n;
 
 	buf[0] = start;
-	buf[1] = *byte;
+	buf[1] = byte;
 
 	n = QC_IO_TwiWriteTo ( MPU6050_I2C_ADDRESS, buf, 2, true, true );
 	if ( n != 0xFFFF )

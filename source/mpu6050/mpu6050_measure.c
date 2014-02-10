@@ -19,18 +19,19 @@ void MPU6050_ReadValues (mpu6050_values_t *data, uint8_t gyro_range, uint8_t acc
 	
 	data->temperature = ( (float) rawdata.value.temperature + 12412.0) / 340.0;
 
-	switch ( gyro_range ) {
-		case 0x00: gyro_range_f = 1.0f/131.0f; break;
-		case 0x01: gyro_range_f = 1.0f/65.5f; break;
-		case 0x02: gyro_range_f = 1.0f/32.8f; break;
-		case 0x03: gyro_range_f = 1.0f/16.4f; break;
+	switch ( (gyro_range >> 3) ) {
+		case 0: gyro_range_f = 1.0f/131.0f; break;
+		case 1: gyro_range_f = 1.0f/65.5f; break;
+		case 2: gyro_range_f = 1.0f/32.8f; break;
+		case 3: gyro_range_f = 1.0f/16.4f; break;
+		case 4: gyro_range_f = 1.0f; break;
 	}
 
 	data->x_gyro = (float) rawdata.value.x_gyro * gyro_range_f;
 	data->y_gyro = (float) rawdata.value.y_gyro * gyro_range_f;
 	data->z_gyro = (float) rawdata.value.z_gyro * gyro_range_f;
 
-	data->x_accel = (float) rawdata.value.x_accel / 17203.0f * (accel_range + 1);
-	data->y_accel = (float) rawdata.value.y_accel / 17203.0f * (accel_range + 1);
-	data->z_accel = (float) rawdata.value.z_accel / 17203.0f * (accel_range + 1);
+	data->x_accel = (float) rawdata.value.x_accel / ((accel_range >> 3 != 4 ) ? 16384.0f / ((accel_range >> 3) + 1) : 1.0f);
+	data->y_accel = (float) rawdata.value.y_accel / ((accel_range >> 3 != 4 ) ? 16384.0f / ((accel_range >> 3) + 1) : 1.0f);
+	data->z_accel = (float) rawdata.value.z_accel / ((accel_range >> 3 != 4 ) ? 16384.0f / ((accel_range >> 3) + 1) : 1.0f);
 }

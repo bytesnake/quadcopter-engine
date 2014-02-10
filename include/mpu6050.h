@@ -15,6 +15,7 @@
 #define MPU6050_GOFFSET_Y		   0x01
 #define MPU6050_GOFFSET_Z		   0x02
 #define MPU6050_AUX_VDDIO          0x01   // R/W
+#define MPU6050_SELFTEST	   0x0D
 #define MPU6050_SMPLRT_DIV         0x19   // R/W
 #define MPU6050_CONFIG             0x1A   // R/W
 #define MPU6050_GYRO_CONFIG        0x1B   // R/W
@@ -97,6 +98,11 @@
 #define MPU6050_USER_CTRL          0x6A   // R/W
 #define MPU6050_PWR_MGMT_1         0x6B   // R/W
 #define MPU6050_PWR_MGMT_2         0x6C   // R/W
+#define MPU6050_RA_BANK_SEL	   0x6D
+#define MPU6050_RA_MEM_START_ADDR  0x6E
+#define MPU6050_RA_MEM_R_W	   0x6F
+#define MPU6050_RA_DMP_CFG_1	   0x70
+#define MPU6050_RA_DMP_CFG_2	   0x71
 #define MPU6050_FIFO_COUNTH        0x72   // R/W
 #define MPU6050_FIFO_COUNTL        0x73   // R/W
 #define MPU6050_FIFO_R_W           0x74   // R/W
@@ -588,15 +594,96 @@
 // I2C address thus becomes 0x69.
 #define MPU6050_I2C_ADDRESS 0x68
 
-#define MPU6050_GYRO_250ds 0x00
-#define MPU6050_GYRO_500ds 0x01
-#define MPU6050_GYRO_1000ds 0x02
-#define MPU6050_GYRO_2000ds 0x03
+#define MPU6050_GYRO_250ds 0
+#define MPU6050_GYRO_500ds (1 << 3)
+#define MPU6050_GYRO_1000ds (1 << 4)
+#define MPU6050_GYRO_2000ds (1 << 3) | (1 << 4)
+#define MPU6050_GYRO_NOSCALING (1 << 5)
 
-#define MPU6050_ACCEL_2G 0x00
-#define MPU6050_ACCEL_4G 0x01
-#define MPU6050_ACCEL_8G 0x02
-#define MPU6050_ACCEL_16G 0x03
+#define MPU6050_ACCEL_2G 0
+#define MPU6050_ACCEL_4G (1 << 3)
+#define MPU6050_ACCEL_8G (1 << 4)
+#define MPU6050_ACCEL_16G (1 << 3) | (1 << 4)
+#define MPU6050_ACCEL_NOSCALING (1 << 5)
+
+#define MPU6050_STARTSELFTEST 0xE0
+
+#define MPU6050_FIFO_EN_ACCEL (1 << 3)
+#define MPU6050_FIFO_EN_GYROS (1 << 6) | (1 << 5) | (1 << 4)
+#define MPU6050_FIFO_EN_SLV2 (1 << 2)
+#define MPU6050_FIFO_EN_SLV1 (1 << 1)
+#define MPU6050_FIFO_EN_SLV0 (1 << 0)
+
+#define MPU6050_SLAVE_READ (1 << 7)
+#define MPU6050_SLAVE_EN (1 << 7)
+#define MPU6050_SLAVE_BYTE_SWAP (1 << 6)
+#define MPU6050_SEND_ONLY_DATA (1 << 5)
+
+#define MPU6050_INT_HIGH 0
+#define MPU6050_INT_LOW (1 << 7)
+#define MPU6050_INT_PUSHPULL 0
+#define MPU6050_INT_OPENDRAIN (1 << 6)
+#define MPU6050_INT_SENDIMPULSE 0
+#define MPU6050_INT_HELDHIGH (1 << 5)
+#define MPU6050_INT_CLEARONONLYREAD 0
+#define MPU6050_INT_CLEARONANYIO (1 << 4)
+#define MPU6050_FSYNC_INT_LEVEL_HIGH 0
+#define MPU6050_FSYNC_INT_LEVEL_LOW (1 << 3)
+#define MPU6050_FSYNC_INT_DISABLE 0
+#define MPU6050_FSYNC_INT_ENABLE (1 << 2)
+#define MPU6050_I2C_BYPASS_DISABLE 0
+#define MPU6050_I2C_BYPASS_ENABLE (1 << 1)
+
+#define MPU6050_INT_MOT_DISABLE 0
+#define MPU6050_INT_MOT_ENABLE (1 << 6)
+#define MPU6050_INT_FIFO_OVERFLOW_DISABLE 0
+#define MPU6050_INT_FIFO_OVERFLOW_ENABLE (1 << 4)
+#define MPU6050_INT_I2C_MST_INT_DISABLE 0
+#define MPU6050_INT_I2C_MST_INT_ENABLE (1 << 3)
+#define MPU6050_INT_DATA_READY_DISABLE 0
+#define MPU6050_INT_DATA_READY_ENABLE (1 << 0)
+
+#define MPU6050_DELAY_SHADOW (1 << 7)
+#define MPU6050_I2C_SLV4_DELAY (1 << 4)
+#define MPU6050_I2C_SLV3_DELAY (1 << 3)
+#define MPU6050_I2C_SLV2_DELAY (1 << 2)
+#define MPU6050_I2C_SLV1_DELAY (1 << 1)
+#define MPU6050_I2C_SLV0_DELAY (1 << 0)
+
+#define MPU6050_RESET_GYRO (1 << 2)
+#define MPU6050_RESET_ACCEL (1 << 1)
+#define MPU6050_RESET_TEMP (1 << 0)
+
+#define MPU6050_ENABLE_DMP (1 << 7)
+#define MPU6050_ENABLE_FIFO (1 << 6)
+#define MPU6050_ENABLE_I2C_MASTERMODE (1 << 5)
+#define MPU6050_ENABLE_SPI (1 << 4)
+#define MPU6050_RESET_DMP (1 << 3)
+#define MPU6050_RESET_FIFO (1 << 2)
+#define MPU6050_RESET_I2C_MASTER (1 << 1)
+#define MPU6050_RESET_ALLSENSORS (1 << 0)
+
+#define MPU6050_FULLRESET (1 << 7)
+#define MPU6050_DISABLE_SLEEP 0
+#define MPU6050_ENABLE_SLEEP (1 << 6)
+#define MPU6050_DISABLE_CYCLE 0
+#define MPU6050_ENABLE_CYCLE (1 << 5)
+#define MPU6050_DISABLE_TEMP (1 << 3)
+
+#define MPU6050_CLOCK_INTERNAL_8MHZ 0
+#define MPU6050_CLOCK_PLL_XGYRO 1
+#define MPU6050_CLOCK_PLL_YGYRO 2
+#define MPU6050_CLOCK_PLL_ZGYRO 3
+#define MPU6050_CLOCK_EXTERNAL_SLOW 4
+#define MPU6050_CLOCK_EXTERNAL_FAST 5
+
+#define MPU6050_CYCLE_WAKEUP_1p25Hz 0
+#define MPU6050_CYCLE_WAKEUP_5Hz (1 << 6)
+#define MPU6050_CYCLE_WAKEUP_20Hz (1 << 7)
+#define MPU6050_CYCLE_WAKEUP_40Hz (1 << 6) | (1 << 7)
+
+#define MPU6050_GYRO_STANDBY (1 << 2) | (1 << 1) | (1 << 0)
+#define MPU6050_ACCEL_STANDBY (1 << 5) | (1 << 4) | (1 << 3)
 
 typedef union {
 struct
@@ -641,9 +728,45 @@ typedef struct
 
 typedef struct
 {
-	uint8_t x;	
-	uint8_t y;
-	uint8_t z;
+	int8_t x;	
+	int8_t y;
+	int8_t z;
 } mpu6050_gyro_offset_t;
+
+typedef struct
+{
+	uint8_t x_gyro;
+	uint8_t y_gyro;
+	uint8_t z_gyro;
+
+	uint8_t x_accel;
+	uint8_t y_accel;
+	uint8_t z_accel;
+} mpu6050_selftest_t;
+
+#define MPU6050_SetSampleRateDivider(c) MPU6050_WriteByte ( MPU6050_SMPLRT_DIV, c )
+#define MPU6050_SetConfig(c) MPU6050_WriteByte ( MPU6050_CONFIG, c )
+#define MPU6050_SetGyroConfig(c) MPU6050_WriteByte ( MPU6050_GYRO_CONFIG, c )
+#define MPU6050_SetAccelConfig(c) MPU6050_WriteByte ( MPU6050_ACCEL_CONFIG, c )
+#define MPU6050_SetMotionDetectionThreshold(c) MPU6050_WriteByte ( MPU6050_MPT_THRE, c )
+#define MPU6050_SetFifoState(c) MPU6050_WriteByte ( MPU6050_FIFO_EN, c )
+#define MPU6050_SetI2CMasterControl(c) MPU6050_WriteByte ( MPU6050_I2C_MST_CTRL, c )
+#define MPU6050_SetINTBypassConfig(c) MPU6050_WriteByte ( MPU6050_INT_PIN_CFG, c )
+#define MPU6050_SetInterruptState(c) MPU6050_WriteByte (MPU6050_INT_ENABLE, c )
+#define MPU6050_SetMasterDelayControl(c) MPU6050_WriteByte ( MPU6050_I2C_MST_DELAY_CTRL, c )
+#define MPU6050_ResetSignalPath(c) MPU6050_WriteByte ( MPU6050_SIGNAL_PATH_RESET, c )
+#define MPU6050_SetMotionDetectionControl(c) MPU6050_WriteByte ( MPU6050_MOT_DETECT_CTRL, c )
+#define MPU6050_SetUserControl(c) MPU6050_WriteByte ( MPU6050_USER_CTRL, c )
+#define MPU6050_SetPowerMGMT1(c) MPU6050_WriteByte ( MPU6050_PWR_MGMT_1, c )
+#define MPU6050_SetPowerMGMT2(c) MPU6050_WriteByte ( MPU6050_PWR_MGMT_2, c )
+#define MPU6050_WriteFifo(c) MPU6050_WriteByte ( MPU6050_FIFO_R_W, c )
+
+void MPU6050_PerformSlaveIO ( uint8_t id, uint8_t mode_addr, uint8_t from, uint8_t desc );
+void MPU6050_WriteToSlave ( uint8_t id, uint8_t data );
+uint8_t MPU6050_ReadFromSlave ( uint8_t id );
+uint16_t MPU6050_FifoCount ();
+uint8_t MPU6050_GetVersion ();
+uint8_t MPU6050_GetPowerMode ();
+void MPU6050_GetGyroOffset ( mpu6050_gyro_offset_t *offset );
 
 #endif
