@@ -23,7 +23,7 @@ uint8_t MPU6050_ReadFromSlave ( uint8_t id )
 	// TODO!
 }
 
-uint16_t MPU6050_FifoCount ()
+uint16_t MPU6050_FIFOCount ()
 {
 	uint8_t a, b;
 
@@ -31,6 +31,13 @@ uint16_t MPU6050_FifoCount ()
 	MPU6050_Read ( MPU6050_FIFO_COUNTL, &b, 1 );
 
 	return (a << 8) | b;
+}
+
+void MPU6050_ReadFIFO ( void *data, uint8_t length )
+{
+	uint8_t *buf = (uint8_t*) data;
+
+	MPU6050_Read ( MPU6050_FIFO_R_W, buf, length );
 }
 
 void MPU6050_GetSelfTestRegister ( mpu6050_selftest_t *test )
@@ -96,7 +103,7 @@ void MPU6050_SetMemoryStartAddr ( uint8_t addr )
 	MPU6050_WriteByte ( MPU6050_RA_MEM_START_ADDR, addr );
 }
 
-void MPU6050_ReadMemoryByte ()
+uint8_t MPU6050_ReadMemoryByte ()
 {
 	uint8_t c;
 

@@ -634,6 +634,14 @@
 #define MPU6050_I2C_BYPASS_DISABLE 0
 #define MPU6050_I2C_BYPASS_ENABLE (1 << 1)
 
+#define MPU6050_FSYNC_TEMP (1 << 1)
+#define MPU6050_FSYNC_GYROX (1 << 2)
+#define MPU6050_FSYNC_GYROY (1 << 3)
+#define MPU6050_FSYNC_GYROZ (1 << 4)
+#define MPU6050_FSYNC_ACCELX (1 << 5)
+#define MPU6050_FSYNC_ACCELY (1 << 6)
+#define MPU6050_FSYNC_ACCELZ (1 << 7)
+
 #define MPU6050_INT_MOT_DISABLE 0
 #define MPU6050_INT_MOT_ENABLE (1 << 6)
 #define MPU6050_INT_FIFO_OVERFLOW_DISABLE 0
@@ -654,6 +662,7 @@
 #define MPU6050_RESET_ACCEL (1 << 1)
 #define MPU6050_RESET_TEMP (1 << 0)
 
+#define MPU6050_DISABLE_DMP 0
 #define MPU6050_ENABLE_DMP (1 << 7)
 #define MPU6050_ENABLE_FIFO (1 << 6)
 #define MPU6050_ENABLE_I2C_MASTERMODE (1 << 5)
@@ -684,6 +693,9 @@
 
 #define MPU6050_GYRO_STANDBY (1 << 2) | (1 << 1) | (1 << 0)
 #define MPU6050_ACCEL_STANDBY (1 << 5) | (1 << 4) | (1 << 3)
+
+// DMP
+#define MPU6050_DMP_MEMORY_CHUNK_SIZE 16
 
 typedef union {
 struct
@@ -760,6 +772,8 @@ typedef struct
 #define MPU6050_SetPowerMGMT1(c) MPU6050_WriteByte ( MPU6050_PWR_MGMT_1, c )
 #define MPU6050_SetPowerMGMT2(c) MPU6050_WriteByte ( MPU6050_PWR_MGMT_2, c )
 #define MPU6050_WriteFifo(c) MPU6050_WriteByte ( MPU6050_FIFO_R_W, c )
+#define MPU6050_SetOTPBankValid(c) MPU6050_WriteByte ( MPU6050_GOFFSET_X, c & 0x01 )
+#define MPU6050_SetSlaveAddr(c) MPU6050_WriteByte ( 0x25, c)
 
 void MPU6050_PerformSlaveIO ( uint8_t id, uint8_t mode_addr, uint8_t from, uint8_t desc );
 void MPU6050_WriteToSlave ( uint8_t id, uint8_t data );

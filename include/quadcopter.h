@@ -25,6 +25,7 @@
 #include "qc_internserial.h"
 #include "qc_wire.h"
 
+#include "mpu6050_dmp.h"
 #include "mpu6050.h"
 
 #include "kalman.h"

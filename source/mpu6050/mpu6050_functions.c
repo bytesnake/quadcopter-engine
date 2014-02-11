@@ -43,3 +43,79 @@ bool MPU6050_PerformSelfTest ()
 	        abs((data1.y_gyro - fm_YGYRO)/fm_YGYRO) < 0.14 &&
 	        abs((data1.z_gyro - fm_ZGYRO)/fm_ZGYRO) < 0.14);
 }
+
+void MPU6050_ReadMemoryBlock ( uint8_t *data, uint16_t size, uint8_t bank, uint8_t addr )
+{
+	uint16_t i;
+	uint8_t chunkSize;
+
+	MPU6050_SetMemoryBank ( bank );
+	MPU6050_SetMemoryStartAddr ( addr );
+
+	for(i = 0; i < size;)
+	{
+		chunkSize = MPU6050_DMP_MEMORY_CHUNK_SIZE;
+	
+		if (i + chunkSize > size) chunkSize = size - i;
+		if (chunkSize > 256 - addr) chunkSize = 256 - addr;
+	
+		MPU6050_Read ( MPU6050_RA_MEM_R_W, data + i, chunkSize );
+
+		i += chunkSize;
+
+		// WTTF ?!?!
+		addr += chunkSize;
+
+		// if we aren't done, update bank (if necessary) and address
+		if ( i < size ) {
+			if ( addr == 0 ) bank ++;
+			MPU6050_SetMemoryBank ( bank );
+			MPU6050_SetMemoryStartAddr ( addr );
+		}
+	}
+}
+
+void MPU6050_WriteMemoryBlock ( const void *data, uint16_t size, uint8_t bank, uint8_t addr, bool useProgMem)
+{
+	uint16_t i;
+	uint8_t chunkSize, j;
+	uint8_t progMemBuffer[MPU6050_DMP_MEMORY_CHUNK_SIZE];
+
+	const uint8_t *buf = (uint8_t*) data;
+	
+	MPU6050_SetMemoryBank ( bank );
+	MPU6050_SetMemoryStartAddr ( addr );
+
+	for ( i = 0; i < size;)
+	{
+		chunkSize = MPU6050_DMP_MEMORY_CHUNK_SIZE;
+		
+		if (i + chunkSize > size) chunkSize = size - i;
+		if (chunkSize > 256 - addr) chunkSize = 256 - addr;
+
+		// translate to homogene memory
+		if ( useProgMem ) {
+			j = chunkSize;
+			while ( j -- )
+				progMemBuffer[j] = pgm_read_byte ( data + i + j );
+
+			MPU6050_Write ( MPU6050_RA_MEM_R_W, &progMemBuffer, chunkSize );
+		}
+		else
+			MPU6050_Write ( MPU6050_RA_MEM_R_W, buf + i, chunkSize );
+
+		i+= chunkSize;
+
+		// Immer noch WTTF
+		addr += chunkSize;
+
+		// if we aren't done, update bank (if necessary) and address
+		if ( i < size ) {
+			if ( addr == 0 ) bank ++;
+			MPU6050_SetMemoryBank ( bank );
+			MPU6050_SetMemoryStartAddr ( addr );
+		}
+
+	}
+		
+}
