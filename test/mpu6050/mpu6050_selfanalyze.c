@@ -15,12 +15,6 @@ int main(int argc, const char *argv[])
 
 	MPU6050_SetConfig ( 0x06 );
 
-	if ( ! MPU6050_PerformSelfTest () )
-		for ( ;; ) {
-			printf("SelfTest not passed!\n");
-			msleep ( 100 );
-		}
-	
 	for ( ;; )
 	{
 

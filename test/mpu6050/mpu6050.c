@@ -12,20 +12,13 @@ int main(int argc, const char *argv[])
 	mpu6050_gyro_offset_t offset;
 	mpu6050_values_t data;
 
-	MPU6050_SetPowerMGMT1 ( MPU6050_CLOCK_PLL_ZGYRO );
-
-	MPU6050_SetAccelConfig ( MPU6050_ACCEL_4G );
-	MPU6050_SetGyroConfig ( MPU6050_GYRO_250ds );
-
-	MPU6050_SetConfig ( 0x06 );
-
-	MPU6050_GetGyroOffset ( &offset );
+	MPU6050_Init ();
 
 	for ( ;; )
 	{
 		msleep ( 10 );
 
-		MPU6050_ReadValues ( &data, MPU6050_GYRO_250ds, MPU6050_ACCEL_4G, &offset );
+		MPU6050_ReadValues ( &data, MPU6050_GYRO_2000ds, MPU6050_ACCEL_4G, &offset );
 		
 		if ( QC_GetLastError () != QC_ERROR_SUCCESS ) {
 			QC_ResetError ();

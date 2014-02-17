@@ -182,15 +182,7 @@ const uint8_t dmpConfig[MPU6050_DMP_CONFIG_SIZE] PROGMEM = {
     // the FIFO output at the desired rate. Handling FIFO overflow cleanly is also a good idea.
 };
 
-const uint8_t dmpUpdates[MPU6050_DMP_UPDATES_SIZE] PROGMEM = {
-    0x01,   0xB2,   0x02,   0xFF, 0xFF,
-    0x01,   0x90,   0x04,   0x09, 0x23, 0xA1, 0x35,
-    0x01,   0x6A,   0x02,   0x06, 0x00,
-    0x01,   0x60,   0x08,   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0x00,   0x60,   0x04,   0x40, 0x00, 0x00, 0x00,
-    0x01,   0x62,   0x02,   0x00, 0x00,
-    0x00,   0x60,   0x04,   0x00, 0x40, 0x00, 0x00
-};
+volatile uint8_t data_avaible;
 
 uint16_t MPU6050_WriteDMP ( const void *data, uint16_t i, bool useProgMem )
 {
@@ -201,101 +193,54 @@ uint16_t MPU6050_WriteDMP ( const void *data, uint16_t i, bool useProgMem )
 	offset = (useProgMem ? pgm_read_byte ( buf + i++ ) : buf[i++]);
 	length = (useProgMem ? pgm_read_byte ( buf + i++ ) : buf[i++]);
 
-	if ( length == 0x00 )
-		MPU6050_WriteByte ( MPU6050_INT_ENABLE, 0x32 );
+	if ( length == 0x00 ) {
+		MPU6050_SetInterruptState ( 0x32 );
+		i ++;
+	}
 	else
 		MPU6050_WriteMemoryBlock ( buf + i, length, bank, offset, useProgMem );
 
 	return i + length;
 }
 
-uint8_t MPU6050_WriteDMPConfig ( const void *data, uint16_t size, bool useProgMem )
+void MPU6050_WriteDMPConfig ( const void *data, uint16_t size, bool useProgMem )
 {
-	uint16_t i;
+	uint16_t i = 0;
 
-	for ( i = 0; i < size; )
-	{
+	while ( i < size )
 		i = MPU6050_WriteDMP ( data, i, useProgMem );
-	}
 }
 	
 void MPU6050_DmpInit ()
 {
-	// reset entire device
-	MPU6050_SetPowerMGMT1 ( MPU6050_DEVICE_RESET );
-	msleep ( 30 );
+	// ..
+	MPU6050_SetDMPConfig1 ( 0x03 );
 
-	// disable sleep mode
-	MPU6050_SetPowerMGMT1 ( 0x00 );
-
-	// read mpu hardware revision
-
-	uint8_t hwRevision;
-	MPU6050_SetMemoryBank ( 0x10, MPU6050_DMP_USERBANK | MPU6050_DMP_PREFETCH );
-	MPU6050_SetMemoryStartAddr ( 0x06 );
-	hwRevision = MPU6050_ReadMemoryByte ();
-	MPU6050_SetMemoryBank ( 0x00, 0x00 );
-
-	// Setup weird stuff TODO!!
-	MPU6050_SetSlaveAddr ( 0x7F );
-	MPU6050_SetUserControl ( 0x00 );
-	MPU6050_SetSlaveAddr ( 0x68 );
-	MPU6050_SetUserControl ( MPU6050_RESET_I2C_MASTER );
-	msleep ( 20 );
-
-	// write DMP block
-	MPU6050_WriteMemoryBlock ( dmpMemory, MPU6050_DMP_CODE_SIZE, true );
+	// write DMP code block
+	MPU6050_WriteMemoryBlock ( dmpMemory, MPU6050_DMP_CODE_SIZE, 0, 0, true );	
 
 	// write DMP config block
 	MPU6050_WriteDMPConfig ( dmpConfig, MPU6050_DMP_CONFIG_SIZE, true );
 
-	// init MPU6050 with valuable settings
-	MPU6050_SetConfig ( MPU6050_FSYNC_TEMP | 0x03 );	
-	MPU6050_SetGyroConfig ( MPU6050_GYRO_2000ds );
-	MPU6050_SetPowerMGMT1 ( MPU6050_CLOCK_PLL_ZGYRO );
-	MPU6050_SetPowerMGMT2 ( 0x00 );
-	MPU6050_SetSampleRateDivider ( 4 ); // 1kHz/(1 + 4) = 200Hz
-
 	// enable FIFO Interrupts
-	MPU6050_SetInterruptState ( MPU6050_INT_FIFO_OVERFLOW_ENABLE | (1 << 1) );
-
-	// invalid OTPBank
-	MPU6050_SetOTPBankValid ( 0x00 );
-
-	// write the first two blocks of the configuration
-	uint16_t i = 0;
-	i = MPU6050_WriteDMP ( dmpUpdates, i, true );
-	i = MPU6050_WriteDMP ( dmpUpdates, i, true );
-
-	// Reset FIFO
-	MPU6050_SetUserControl ( MPU6050_RESET_FIFO );
-
-	uint16_t fifoCount;
-	uint8_t fifoBuffer[128];
+	//MPU6050_SetInterruptState ( MPU6050_INT_FIFO_OVERFLOW_ENABLE | (1 << 1) | 1 );
+	MPU6050_SetInterruptState ( 0x12 );
 	
-	fifoCount = MPU6050_FIFOCount();
-	MPU6050_ReadFIFO ( &fifoBuffer, fifoCount );
-	
-	// Motion Detection TODO!!
-	
-	MPU6050_SetUserControl ( MPU6050_ENABLE_FIFO | MPU6050_RESET_FIFO | MPU6050_ENABLE_DMP | MPU6050_RESET_DMP );
+	// enable FIFO/DMP interrupts (client site)
+	MPU6050_SetUserControl ( MPU6050_ENABLE_FIFO | MPU6050_ENABLE_DMP );	
 
-	// write the next three blocks
-	i = MPU6050_WriteDMP ( dmpUpdates, i, true );
-	i = MPU6050_WriteDMP ( dmpUpdates, i, true );
-	i = MPU6050_WriteDMP ( dmpUpdates, i, true );
+	// enable External Interrupts on 0 (host site)
+	EICRA = (EICRA & ~((1<<ISC00) | (1<<ISC01))) | (3 << ISC00);
+	EIMSK |= (1<<INT0);	
+}
 
-	while((fifoCount = MPU6050_FIFOCount()) < 3);
+uint8_t MPU6050_DmpHasData ()
+{ 
+	uint8_t tmp = data_avaible;
+	data_avaible = 0;
+	return tmp;
+}
 
-	//TODO mpuIntStatus
-	
-	i = MPU6050_WriteDMP ( dmpUpdates, i, true );
-	
-	while((fifoCount = MPU6050_FIFOCount()) < 3);
-
-	MPU6050_ReadFIFO ( fifoBuffer, fifoCount );
-	
-	i = MPU6050_WriteDMP ( dmpUpdates, i, true );
-
-	MPU6050_SetUserControl ( MPU6050_ENABLE_FIFO | MPU6050_RESET_FIFO | MPU6050_ENABLE_DMP );
+ISR(INT0_vect) {
+	data_avaible = 1;
 }

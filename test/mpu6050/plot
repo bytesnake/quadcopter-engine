@@ -2,12 +2,12 @@
 
 set term qt 0
 set title "MPU6050 Auswertung Gyroscope"
-plot 'test.dat' using 1 title 'Yaw', 'test.dat' using 2 title 'Pitch', 'test.dat' using 3 title 'Roll'
+plot 'test.dat' using 1 title 'Yaw' with lines, 'test.dat' using 2 title 'Pitch' with lines, 'test.dat' using 3 title 'Roll' with lines
 
 pause -1
 
-set term qt 1
-set title "MPU6050 Auswertung Beschleunigungssensor"
-plot 'test.dat' using 4 title 'X' with lines, 'test.dat' using 5 title 'Y' with lines, 'test.dat' using 6 title 'Z' with lines
+#set term qt 1
+#set title "MPU6050 Auswertung Beschleunigungssensor"
+#plot 'test.dat' using 4 title 'X' with lines, 'test.dat' using 5 title 'Y' with lines, 'test.dat' using 6 title 'Z' with lines
 
-pause -1
+#pause -1

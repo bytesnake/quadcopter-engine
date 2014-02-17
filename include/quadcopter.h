@@ -28,13 +28,14 @@
 #include "mpu6050_dmp.h"
 #include "mpu6050.h"
 
-#include "kalman.h"
+#include "math.h"
 
 #define clockCyclesPerMicrosecond() ( F_CPU / 1000000L )
 #define clockCyclesToMicroseconds(a) ( (a) / clockCyclesPerMicrosecond() )
 #define microsecondsToClockCycles(a) ( (a) * clockCyclesPerMicrosecond() )
 
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
+#define MAX(x, y) (((x) < (y)) ? (y) : (y))
 
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 

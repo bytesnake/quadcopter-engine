@@ -164,10 +164,15 @@ uint8_t QC_IO_TwiReadFrom(uint8_t address, uint8_t* data, uint8_t length, uint8_
   if (twi_masterBufferIndex < length)
     length = twi_masterBufferIndex;
 
+
   // copy twi buffer to data
+  //printf("Read: ");
   for(i = 0; i < length; ++i){
+    //printf("0x%02X, ", twi_masterBuffer[i]);
     data[i] = twi_masterBuffer[i];
   }
+
+  //printf("\n");
 	
   return length;
 }
@@ -210,9 +215,12 @@ uint8_t QC_IO_TwiWriteTo(uint8_t address, uint8_t* data, uint8_t length, uint8_t
   twi_masterBufferLength = length;
   
   // copy data to twi buffer
+  //printf("Write: ");
   for(i = 0; i < length; ++i){
+   // printf("0x%02X, ", data[i]);
     twi_masterBuffer[i] = data[i];
   }
+  //printf("\n");
   
   // build sla+w, slave device address + w bit
   twi_slarw = TW_WRITE;
@@ -240,7 +248,9 @@ uint8_t QC_IO_TwiWriteTo(uint8_t address, uint8_t* data, uint8_t length, uint8_t
   while(wait && (TWI_MTX == twi_state)){
     continue;
   }
-  
+ 
+  //printf("write error: %02X\n", twi_error );
+ 
   if (twi_error == 0xFF)
     return 0;	// success
   else if (twi_error == TW_MT_SLA_NACK)

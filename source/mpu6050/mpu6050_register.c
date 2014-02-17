@@ -23,14 +23,25 @@ uint8_t MPU6050_ReadFromSlave ( uint8_t id )
 	// TODO!
 }
 
+uint8_t MPU6050_GetIntStatus ()
+{
+	uint8_t c;
+		
+	MPU6050_Read ( MPU6050_INT_STATUS, &c, 1 );
+
+	return c;
+}
+
 uint16_t MPU6050_FIFOCount ()
 {
-	uint8_t a, b;
+	uint8_t a[2];
 
-	MPU6050_Read ( MPU6050_FIFO_COUNTH, &a, 1 );
-	MPU6050_Read ( MPU6050_FIFO_COUNTL, &b, 1 );
+	MPU6050_Read ( MPU6050_FIFO_COUNTH, &a[0], 1 );
+	MPU6050_Read ( MPU6050_FIFO_COUNTL, &a[1], 1 );
 
-	return (a << 8) | b;
+	a[1] = (a[1] & 0x00FF);
+
+	return ((uint8_t)a[0] << 8) | ((uint8_t)a[1])&0x00FF;
 }
 
 void MPU6050_ReadFIFO ( void *data, uint8_t length )
@@ -76,31 +87,12 @@ uint8_t MPU6050_GetPowerMode ()
         return c;
 }
 
-void MPU6050_GetGyroOffset ( mpu6050_gyro_offset_t *offset )
-{
-
-	MPU6050_Read ( MPU6050_GOFFSET_X, &offset->x, 1 );
-	MPU6050_Read ( MPU6050_GOFFSET_Y, &offset->y, 1 );
-	MPU6050_Read ( MPU6050_GOFFSET_Z, &offset->z, 1 );
-	
-	offset->x = (offset->x >> 1) & 0b0011111;
-	offset->y = (offset->y >> 1) & 0b0011111;
-	offset->z = (offset->z >> 1) & 0b0011111;
-
-	//TODO!!
-}
-
 void MPU6050_SetMemoryBank ( uint8_t bank, uint8_t flags )
 {
 	bank &= 0x1F;
 	bank |= flags;
 	
 	MPU6050_WriteByte ( MPU6050_RA_BANK_SEL, bank );
-}
-
-void MPU6050_SetMemoryStartAddr ( uint8_t addr )
-{
-	MPU6050_WriteByte ( MPU6050_RA_MEM_START_ADDR, addr );
 }
 
 uint8_t MPU6050_ReadMemoryByte ()
@@ -116,4 +108,3 @@ void MPu6050_WriteMemoryByte ( uint8_t data )
 {
 	MPU6050_WriteByte ( MPU6050_RA_MEM_R_W, data );
 }
-

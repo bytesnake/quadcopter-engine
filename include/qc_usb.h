@@ -54,7 +54,7 @@ volatile uint8_t qc_io_usbselectedep;
 void QC_IO_UsbInitEndpoint ( uint8_t index, uint8_t type, uint8_t size );
 void QC_IO_UsbInitEndpoints ();
 
-void QC_IO_UsbSendStringDescriptor ( const char *string, uint8_t length );
+void QC_IO_UsbSendStringDescriptor ( const uint8_t *string, uint8_t length );
 void QC_IO_UsbSendConfiguration ( uint16_t maxlen );
 void QC_IO_UsbSendDescriptor ( qc_io_usbsetup_t *setup );
 

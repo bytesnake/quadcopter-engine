@@ -540,7 +540,6 @@
 #define MPU6050_TEMP_DIS     MPU6050_D3    // 1: disable temperature sensor
 #define MPU6050_CYCLE        MPU6050_D5    // 1: sample and sleep
 #define MPU6050_SLEEP        MPU6050_D6    // 1: sleep mode
-#define MPU6050_DEVICE_RESET MPU6050_D7    // 1: reset to default values
 
 // Combined definitions for the CLKSEL
 #define MPU6050_CLKSEL_0 (0)
@@ -608,6 +607,8 @@
 
 #define MPU6050_STARTSELFTEST 0xE0
 
+#define MPU6050_DEVICE_RESET (1 << 6)
+
 #define MPU6050_FIFO_EN_ACCEL (1 << 3)
 #define MPU6050_FIFO_EN_GYROS (1 << 6) | (1 << 5) | (1 << 4)
 #define MPU6050_FIFO_EN_SLV2 (1 << 2)
@@ -634,13 +635,13 @@
 #define MPU6050_I2C_BYPASS_DISABLE 0
 #define MPU6050_I2C_BYPASS_ENABLE (1 << 1)
 
-#define MPU6050_FSYNC_TEMP (1 << 1)
-#define MPU6050_FSYNC_GYROX (1 << 2)
-#define MPU6050_FSYNC_GYROY (1 << 3)
-#define MPU6050_FSYNC_GYROZ (1 << 4)
-#define MPU6050_FSYNC_ACCELX (1 << 5)
-#define MPU6050_FSYNC_ACCELY (1 << 6)
-#define MPU6050_FSYNC_ACCELZ (1 << 7)
+#define MPU6050_FSYNC_TEMP (1 << 3)
+#define MPU6050_FSYNC_GYROX (2 << 3)
+#define MPU6050_FSYNC_GYROY (3 << 3)
+#define MPU6050_FSYNC_GYROZ (4 << 3)
+#define MPU6050_FSYNC_ACCELX (5 << 3)
+#define MPU6050_FSYNC_ACCELY (6 << 3)
+#define MPU6050_FSYNC_ACCELZ (7 << 3)
 
 #define MPU6050_INT_MOT_DISABLE 0
 #define MPU6050_INT_MOT_ENABLE (1 << 6)
@@ -774,13 +775,20 @@ typedef struct
 #define MPU6050_WriteFifo(c) MPU6050_WriteByte ( MPU6050_FIFO_R_W, c )
 #define MPU6050_SetOTPBankValid(c) MPU6050_WriteByte ( MPU6050_GOFFSET_X, c & 0x01 )
 #define MPU6050_SetSlaveAddr(c) MPU6050_WriteByte ( 0x25, c)
+#define MPU6050_SetDMPConfig1(c) MPU6050_WriteByte ( MPU6050_RA_DMP_CFG_1, c)
+#define MPU6050_SetMemoryAddr(c) MPU6050_WriteByte ( MPU6050_RA_MEM_START_ADDR, c)
 
 void MPU6050_PerformSlaveIO ( uint8_t id, uint8_t mode_addr, uint8_t from, uint8_t desc );
 void MPU6050_WriteToSlave ( uint8_t id, uint8_t data );
 uint8_t MPU6050_ReadFromSlave ( uint8_t id );
-uint16_t MPU6050_FifoCount ();
+uint16_t MPU6050_FIFOCount ();
 uint8_t MPU6050_GetVersion ();
 uint8_t MPU6050_GetPowerMode ();
 void MPU6050_GetGyroOffset ( mpu6050_gyro_offset_t *offset );
+
+void MPU6050_Write ( uint8_t reg, const void *buffer, uint8_t size );
+uint8_t MPU6050_Read ( uint8_t reg, void *buffer, uint8_t size );
+
+uint8_t MPU6050_DmpHasData ();
 
 #endif

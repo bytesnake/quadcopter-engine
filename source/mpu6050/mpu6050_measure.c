@@ -1,8 +1,22 @@
 #include "../../include/quadcopter.h"
-	
+
+void MPU6050_ReadDMPValues ( QUATERN *Q )
+{
+	uint8_t data[MPU6050_DMP_PACKET_SIZE];
+
+	 while ( MPU6050_FIFOCount() < 42 );
+
+	MPU6050_ReadFIFO ( data, MPU6050_DMP_PACKET_SIZE );
+
+	Q->W = (float)((data[0] << 8) + data[1]) / 16384.0f;
+	Q->X = (float)((data[4] << 8) + data[5]) / 16384.0f;
+	Q->Y = (float)((data[8] << 8) + data[9]) / 16384.0f;
+	Q->Z = (float)((data[12]<< 8) + data[13])/ 16384.0f;
+}
+
 #define SWAP(x,y) swap = x; x = y; y = swap
 
-void MPU6050_ReadValues (mpu6050_values_t *data, uint8_t gyro_range, uint8_t accel_range, mpu6050_gyro_offset_t *offset ) {
+void MPU6050_ReadRawValues (mpu6050_values_t *data, uint8_t gyro_range, uint8_t accel_range, mpu6050_gyro_offset_t *offset ) {
 	mpu6050_rawvalues_t rawdata;
 	uint8_t swap;
 	float gyro_range_f;	
