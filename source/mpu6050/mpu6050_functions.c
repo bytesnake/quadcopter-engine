@@ -38,7 +38,7 @@ bool MPU6050_PerformSelfTest ()
 	MPU6050_ReadRawValues ( &data2, MPU6050_GYRO_NOSCALING, MPU6050_ACCEL_NOSCALING );
 	
 	data1.x_gyro -= data2.x_gyro; data1.y_gyro -= data2.y_gyro; data1.z_gyro -= data2.z_gyro;
-	data1.x_accel -= data2.x_accel; data1.y_accel -= data2.y_accel; data1.z_accel -= data2.z_accel;
+	data1.x_accel -= data2.x_accel; data1.y_accel -= data2.y_accel; data1.z_accel -= data2.z_accel ;
 
 	// calculate factory trim
 	mpu6050_selftest_t fm;
@@ -58,19 +58,15 @@ bool MPU6050_PerformSelfTest ()
 	        abs((data1.z_gyro - fm_ZGYRO)/fm_ZGYRO) < 0.14);
 }
 
-void MPU6050_WriteMemoryBlock ( const void *data, uint16_t size, uint8_t bank, uint8_t addr, bool useProgMem)
+void MPU6050_WriteMemoryBlock ( const void *data, uint16_t size, uint8_t bank, uint8_t addr, bool useProgMem )
 {
 	uint16_t i;
 	uint8_t chunkSize, j;
 	uint8_t progMemBuffer[MPU6050_DMP_MEMORY_CHUNK_SIZE];
-	uint8_t verifyBuffer [MPU6050_DMP_MEMORY_CHUNK_SIZE];
 
-	for ( j = 0; j < MPU6050_DMP_MEMORY_CHUNK_SIZE; j++ )
-		verifyBuffer[ j ] = 0;
-	
 	const uint8_t *buf = (const uint8_t*) data;
 
-	MPU6050_SetMemoryBank ( bank, 0x00 );
+	MPU6050_SetMemoryBank ( bank );
 	MPU6050_SetMemoryAddr ( addr );
 
 	i = 0;
@@ -91,32 +87,18 @@ void MPU6050_WriteMemoryBlock ( const void *data, uint16_t size, uint8_t bank, u
 		else
 			MPU6050_Write ( MPU6050_RA_MEM_R_W, buf + i, chunkSize );
 
-
-		/*MPU6050_SetMemoryBank ( bank, 0x00 );
-		MPU6050_SetMemoryAddr ( addr );
-
-		MPU6050_Read ( MPU6050_RA_MEM_R_W, verifyBuffer, chunkSize );				
-
-		j = chunkSize+1;
-		while ( (j--) > 1 && progMemBuffer[j-1] == verifyBuffer[j-1] );
-		
-		if ( j > 0 || QC_GetLastError () == QC_ERROR_TWI_WRITE )
-			for ( ;; ) printf("ERROR!\n");
-		*/
-
 		i += chunkSize;
 
+		// wraps to 255
 		addr += chunkSize;
 
 		// if we aren't done, update bank (if necessary) and address
 		if ( i < size ) {
 			if ( addr == 0 ) bank ++;
-			MPU6050_SetMemoryBank ( bank, 0x00 );
+			MPU6050_SetMemoryBank ( bank );
 			MPU6050_SetMemoryAddr ( addr );
 		}
 
 	}
 		
 }
-
-

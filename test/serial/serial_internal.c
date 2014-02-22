@@ -3,7 +3,7 @@
 int main(int argc, const char *argv[])
 {
 	init ();
-	QC_IO_UsbInit ();
+	QC_IO_InternSerialInit ();
 
 	stdout = &QC_InternalSTDOUT;
 

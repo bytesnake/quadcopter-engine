@@ -166,7 +166,6 @@ uint8_t QC_IO_TwiReadFrom(uint8_t address, uint8_t* data, uint8_t length, uint8_
 
 
   // copy twi buffer to data
-  //printf("Read: ");
   for(i = 0; i < length; ++i){
     //printf("0x%02X, ", twi_masterBuffer[i]);
     data[i] = twi_masterBuffer[i];
@@ -217,7 +216,7 @@ uint8_t QC_IO_TwiWriteTo(uint8_t address, uint8_t* data, uint8_t length, uint8_t
   // copy data to twi buffer
   //printf("Write: ");
   for(i = 0; i < length; ++i){
-   // printf("0x%02X, ", data[i]);
+    //printf("0x%02X, ", data[i]);
     twi_masterBuffer[i] = data[i];
   }
   //printf("\n");

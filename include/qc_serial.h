@@ -1,8 +1,6 @@
 #ifndef SERIAL_H
 #define SERIAL_H
 
-#include "quadcopter.h"
-
 #define SERIAL_BUFFER_SIZE 64
 
 typedef struct

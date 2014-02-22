@@ -8,17 +8,15 @@ int main(int argc, const char *argv[])
 
 	stdout = &QC_UsbSTDOUT;
 
-	uint8_t c;
-	mpu6050_gyro_offset_t offset;
-	mpu6050_values_t data;
-
 	MPU6050_Init ();
+	
+	mpu6050_values_t data;
 
 	for ( ;; )
 	{
 		msleep ( 10 );
 
-		MPU6050_ReadValues ( &data, MPU6050_GYRO_2000ds, MPU6050_ACCEL_4G, &offset );
+		MPU6050_ReadRawValues ( &data, MPU6050_GYRO_2000ds, MPU6050_ACCEL_2G );
 		
 		if ( QC_GetLastError () != QC_ERROR_SUCCESS ) {
 			QC_ResetError ();

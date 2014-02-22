@@ -26,7 +26,7 @@ int main(int argc, const char *argv[])
 	uint16_t count;
 	uint8_t intstatus;
 
-	QUATERN q;
+	QUATER q;
 	VECTOR v;
 	
 	for ( ;; )

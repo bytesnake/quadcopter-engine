@@ -1,9 +1,8 @@
 #ifndef QC_DATATYPES
 #define QC_DATATYPES
 
-//#define uint8_t unsigned char
-//#define uint16_t unsigned short
-//#define uint32_t unsigned int
+#define f32 float
+#define f64 double
 
 typedef enum
 {

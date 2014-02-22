@@ -1,11 +1,6 @@
 #ifndef QC_USB_H
 #define QC_USB_H
 
-#include "quadcopter.h"
-
-#include "qc_usb_datatypes.h"
-#include "qc_usb_constants.h"
-
 void QC_IO_UsbInit();
 
 extern qc_serial_t QC_UsbSerialIn;
@@ -32,7 +27,7 @@ extern FILE QC_UsbSTDIN;
 inline uint8_t QC_IO_UsbFifoByteFree ( uint8_t ep );
 inline void QC_IO_UsbFlush ( uint8_t ep );
 
-// unkontrolliertes IO
+// ungesteurtes IO
 uint8_t QC_IO_UsbRecvByte ( uint8_t ep ); 
 uint16_t QC_IO_UsbRecv ( uint8_t ep, void *data, uint16_t count );
 void QC_IO_UsbSendByte ( uint8_t byte, FILE *stream );

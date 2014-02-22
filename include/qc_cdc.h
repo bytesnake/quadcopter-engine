@@ -1,10 +1,6 @@
 #ifndef QC_CDC_H
 #define QC_CDC_H
 
-#include <stdbool.h>
-
-#include "quadcopter.h"
-
 typedef struct
 {
         uint32_t     dwDTERate;

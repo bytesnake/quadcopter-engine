@@ -1,8 +1,6 @@
 #ifndef HARDWARE_SERIAL_H
 #define HARDWARE_SERIAL_H
 
-#include "quadcopter.h"
-
 extern qc_serial_t QC_InternalSerialOut;
 extern qc_serial_t QC_InternalSerialIn;
 

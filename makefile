@@ -15,11 +15,11 @@ PARAMS=-Os -Wl,-u,vfprintf -lprintf_flt -lm -mmcu=$(TYPE) -DUSB_VID=0x2341 -DUSB
 default:
 ifeq (,$(test))
 	$(CC) $(PARAMS) $(SOURCES) test/serial/serial_usb.c -o $(OUTPUT)
-	$(OBJCPY) -j .eeprom --set-section-flags=.eeprom="alloc,load" --change-section-lma .eeprom=0 -O ihex $(OUTPUT).hex $(OUTPUT).eep
+	$(OBJCPY) -j .eeprom --set-section-flags=.eeprom="alloc,load" --change-section-lma .eeprom=0 -O ihex $(OUTPUT) $(OUTPUT).eep
 	$(OBJCPY) -O ihex -R .eeprom $(OUTPUT) $(OUTPUT).hex
 else ifeq (,$(findstring test,$(test)))
 	$(CC) $(PARAMS) $(SOURCES) $(shell find test/ -wholename "test/*/*" -name $(test)*) -o $(OUTPUT)
-	$(OBJCPY) -j .eeprom --set-section-flags=.eeprom="alloc,load" --change-section-lma .eeprom=0 -O ihex $(OUTPUT).hex $(OUTPUT).eep
+	$(OBJCPY) -j .eeprom --set-section-flags=.eeprom="alloc,load" --change-section-lma .eeprom=0 -O ihex $(OUTPUT) $(OUTPUT).eep
 	$(OBJCPY) -O ihex -R .eeprom $(OUTPUT) $(OUTPUT).hex
 endif
 

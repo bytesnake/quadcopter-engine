@@ -1,8 +1,6 @@
 #ifndef QC_USB_DATATYPES
 #define QC_USB_DATATYPES
 
-#include "qc_datatypes.h"
-
 #define D_DEVICE(_class,_subClass,_proto,_packetSize0,_vid,_pid,_version,_im,_ip,_is,_configs) \
         { 18, 1, 0x200, _class,_subClass,_proto,_packetSize0,_vid,_pid,_version,_im,_ip,_is,_configs }
 

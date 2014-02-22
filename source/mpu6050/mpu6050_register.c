@@ -39,9 +39,7 @@ uint16_t MPU6050_FIFOCount ()
 	MPU6050_Read ( MPU6050_FIFO_COUNTH, &a[0], 1 );
 	MPU6050_Read ( MPU6050_FIFO_COUNTL, &a[1], 1 );
 
-	a[1] = (a[1] & 0x00FF);
-
-	return ((uint8_t)a[0] << 8) | ((uint8_t)a[1])&0x00FF;
+	return (a[0] << 8) | a[1];
 }
 
 void MPU6050_ReadFIFO ( void *data, uint8_t length )
@@ -85,26 +83,4 @@ uint8_t MPU6050_GetPowerMode ()
         MPU6050_Read ( MPU6050_PWR_MGMT_1, &c, 1 );
     
         return c;
-}
-
-void MPU6050_SetMemoryBank ( uint8_t bank, uint8_t flags )
-{
-	bank &= 0x1F;
-	bank |= flags;
-	
-	MPU6050_WriteByte ( MPU6050_RA_BANK_SEL, bank );
-}
-
-uint8_t MPU6050_ReadMemoryByte ()
-{
-	uint8_t c;
-
-	MPU6050_Read ( MPU6050_RA_MEM_R_W, &c, 1 );
-	
-	return c;
-}
-
-void MPu6050_WriteMemoryByte ( uint8_t data )
-{
-	MPU6050_WriteByte ( MPU6050_RA_MEM_R_W, data );
 }

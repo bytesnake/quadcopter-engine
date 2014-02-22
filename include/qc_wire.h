@@ -17,37 +17,37 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef twi_h
-#define twi_h
+#ifndef TWI_H
+#define TWI_H
 
-  #include <inttypes.h>
+#include <inttypes.h>
 
-  //#define ATMEGA8
+//#define ATMEGA8
 
-  #ifndef TWI_FREQ
-  #define TWI_FREQ 100000L
-  #endif
+#ifndef TWI_FREQ
+#define TWI_FREQ 100000L
+#endif
 
-  #ifndef TWI_BUFFER_LENGTH
-  #define TWI_BUFFER_LENGTH 32
-  #endif
+#ifndef TWI_BUFFER_LENGTH
+#define TWI_BUFFER_LENGTH 32
+#endif
 
-  #define TWI_READY 0
-  #define TWI_MRX   1
-  #define TWI_MTX   2
-  #define TWI_SRX   3
-  #define TWI_STX   4
+#define TWI_READY 0
+#define TWI_MRX   1
+#define TWI_MTX   2
+#define TWI_SRX   3
+#define TWI_STX   4
   
-  void QC_IO_TwiInit(void);
-  void QC_IO_TwiSetAddress(uint8_t);
-  uint8_t QC_IO_TwiReadFrom(uint8_t, uint8_t*, uint8_t, uint8_t);
-  uint8_t QC_IO_TwiWriteFrom(uint8_t, uint8_t*, uint8_t, uint8_t, uint8_t);
-  uint8_t QC_IO_TwiTransmit(const uint8_t*, uint8_t);
-  void QC_IO_TwiAttachSlaveRxEvent( void (*)(uint8_t*, int) );
-  void QC_IO_TwiAttachSlaveTxEvent( void (*)(void) );
-  void QC_IO_TwiReply(uint8_t);
-  void QC_IO_TwiStop(void);
-  void QC_IO_TwiReleaseBus(void);
+void QC_IO_TwiInit(void);
+void QC_IO_TwiSetAddress(uint8_t);
+uint8_t QC_IO_TwiReadFrom(uint8_t, uint8_t*, uint8_t, uint8_t);
+uint8_t QC_IO_TwiWriteFrom(uint8_t, uint8_t*, uint8_t, uint8_t, uint8_t);
+uint8_t QC_IO_TwiTransmit(const uint8_t*, uint8_t);
+void QC_IO_TwiAttachSlaveRxEvent( void (*)(uint8_t*, int) );
+void QC_IO_TwiAttachSlaveTxEvent( void (*)(void) );
+void QC_IO_TwiReply(uint8_t);
+void QC_IO_TwiStop(void);
+void QC_IO_TwiReleaseBus(void);
 
 #endif
 
