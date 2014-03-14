@@ -61,7 +61,7 @@ int main(int argc, const char *argv[])
     b = MPU6050_ReadFromSlave ( 5 )
     uint16_t z = (a << 8) | b;
 
-    printf(x " | " y " | " z "\n");
+    printf("%x  |  %y  |  %z \n", x, y, z);
     }
 
     /* 	for ( ;; )
